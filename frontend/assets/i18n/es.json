@@ -1,0 +1,45 @@
+{
+    "nav": {
+        "home": "Inicio",
+        "casinos": "Casinos",
+        "slots": "Tragamonedas",
+        "news": "Noticias",
+        "support": "Soporte",
+        "login": "Iniciar sesión"
+    },
+    "home": {
+        "title": "Mejores Casinos",
+        "subtitle": "Reseñas verificadas, bonos exclusivos y plataformas confiables.",
+        "browse": "Explorar todos los casinos",
+        "featured": "Plataformas destacadas",
+        "loading": "Cargando casinos destacados...",
+        "noResults": "No se encontraron casinos. ¡Vuelve más tarde!"
+    },
+    "footer": {
+        "rights": "Todos los derechos reservados.",
+        "terms": "Términos",
+        "privacy": "Privacidad",
+        "support": "Soporte"
+    },
+    "popup": {
+        "tosTitle": "Aviso importante",
+        "tosText": "Al continuar, aceptas nuestros",
+        "tosLink": "Términos de servicio",
+        "and": "y",
+        "privacyLink": "Política de privacidad",
+        "cookieText": "Usamos cookies para mejorar tu experiencia.",
+        "warningText": "El juego en línea puede estar restringido o ser ilegal en tu jurisdicción. Verifica las leyes locales antes de continuar.",
+        "accept": "Acepto",
+        "decline": "Rechazar",
+        "ageTitle": "Verificación de edad",
+        "ageText": "Debes tener 18 años o más para acceder a este sitio.",
+        "ageQuestion": "¿Tienes 18 años o más?",
+        "yes18": "Sí, tengo 18+",
+        "no": "No"
+    },
+    "casino": {
+        "rating": "Calificación",
+        "playNow": "Jugar ahora",
+        "details": "Detalles"
+    }
+}

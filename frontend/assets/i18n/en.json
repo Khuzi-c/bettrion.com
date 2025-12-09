@@ -1,0 +1,45 @@
+{
+    "nav": {
+        "home": "Home",
+        "casinos": "Casinos",
+        "slots": "Slots",
+        "news": "News",
+        "support": "Support",
+        "login": "Login"
+    },
+    "home": {
+        "title": "Top Casinos",
+        "subtitle": "Verified reviews, exclusive bonuses, and trusted platforms.",
+        "browse": "Browse All Casinos",
+        "featured": "Featured Platforms",
+        "loading": "Loading featured casinos...",
+        "noResults": "No casinos found. Check back later!"
+    },
+    "footer": {
+        "rights": "All rights reserved.",
+        "terms": "Terms",
+        "privacy": "Privacy",
+        "support": "Support"
+    },
+    "popup": {
+        "tosTitle": "Important Notice",
+        "tosText": "By continuing, you agree to our",
+        "tosLink": "Terms of Service",
+        "and": "and",
+        "privacyLink": "Privacy Policy",
+        "cookieText": "We use cookies to enhance your experience.",
+        "warningText": "Online gambling may be restricted or illegal in your jurisdiction. Please verify local laws before proceeding.",
+        "accept": "I Accept",
+        "decline": "Decline",
+        "ageTitle": "Age Verification",
+        "ageText": "You must be 18 years or older to access this website.",
+        "ageQuestion": "Are you 18 years of age or older?",
+        "yes18": "Yes, I'm 18+",
+        "no": "No"
+    },
+    "casino": {
+        "rating": "Rating",
+        "playNow": "Play Now",
+        "details": "Details"
+    }
+}

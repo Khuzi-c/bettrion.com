@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Bettrion</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/admin-layout.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="/assets/js/admin-auth.js"></script>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <a href="/" class="brand" style="display: flex; align-items: center; gap: 10px;">
+                <img src="/assets/images/bettrion-logo_notxt.webp" alt="Bettrion" style="height: 35px;">
+                <span style="font-size: 1.5rem; font-weight: 800; color: var(--accent-gold);">Bettrion</span>
+            </a>
+            <nav>
+                <a href="/admin/dashboard" class="active">Dashboard</a>
+                <a href="/admin/platform-edit">Add Platform</a>
+                <a href="/admin/add-slot">Add Slot</a>
+                <a href="/admin/platforms">Manage Platforms</a>
+                <a href="/admin/articles">Manage Articles</a>
+                <a href="/admin/article-edit">Write Article</a>
+                <a href="/admin/tickets">Support Tickets</a>
+                <a href="/admin/staff-time">Staff Hours</a>
+                <a href="/admin/backups">Backups</a>
+                <a href="/admin/images">Image Manager</a>
+                <a href="/admin/users">Users</a>
+                <a href="/admin/settings">Settings</a>
+            </nav>
+            <div style="padding: 20px;">
+                <button onclick="adminLogout()" class="btn"
+                    style="width:100%; background:var(--accent-red);">Logout</button>
+            </div>
+        </aside>
+
+        <main class="admin-content">
+            <h1>Dashboard Overview</h1>
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <h3>Casinos</h3>
+                    <p id="stat-casinos">-</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Users</h3>
+                    <p id="stat-users">-</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Open Tickets</h3>
+                    <p id="stat-tickets">-</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Now</h3>
+                    <p id="stat-active">-</p>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 40px;">Recent Analytics</h2>
+            <div class="card">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>IP Address</th>
+                            <th>Country</th>
+                            <th>Page</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="analytics-table">
+                        <tr>
+                            <td colspan="4">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/utils.js"></script>
+    <script>
+        async function loadStats() {
+            const res = await api.get('/admin/stats');
+            if (res.success) {
+                document.getElementById('stat-casinos').innerText = res.data.casinos;
+                document.getElementById('stat-users').innerText = res.data.users;
+                document.getElementById('stat-tickets').innerText = res.data.tickets;
+                document.getElementById('stat-active').innerText = res.data.active || 0;
+            }
+        }
+
+        async function loadAnalytics() {
+            const res = await api.get('/admin/analytics?limit=10');
+            const tbody = document.getElementById('analytics-table');
+            if (res.success && res.data.length > 0) {
+                tbody.innerHTML = '';
+                res.data.forEach(a => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${a.ip_address}</td>
+                        <td>${a.country || 'Unknown'}</td>
+                        <td>${a.page_url}</td>
+                        <td>${new Date(a.created_at).toLocaleString()}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+
+        window.addEventListener('load', () => {
+            loadStats();
+            loadAnalytics();
+        });
+
+        // Ensure staff logic runs
+        if (!localStorage.getItem('user_id')) {
+            localStorage.setItem('user_id', '11111111-1111-1111-1111-111111111111');
+        }
+        if (window.utils && utils.checkStaffStatus) {
+            utils.checkStaffStatus();
+        }
+    </script>
+</body>
+
+</html>

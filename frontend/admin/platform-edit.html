@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add/Edit Casino - Bettrion Admin</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/admin-layout.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="/assets/js/admin-auth.js"></script>
+    <style>
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: white;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <a href="/" class="brand" style="display: flex; align-items: center; gap: 10px;">
+                <img src="/assets/images/bettrion-logo_notxt.webp" alt="Bettrion" style="height: 35px;">
+                <span style="font-size: 1.5rem; font-weight: 800; color: var(--accent-gold);">Bettrion</span>
+            </a>
+            <nav>
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/platform-edit" class="active">Add Casino</a>
+                <a href="/admin/add-slot">Add Slot</a>
+                <a href="/admin/platforms">Manage Casinos</a>
+                <a href="/admin/articles">Manage Articles</a>
+                <a href="/admin/article-edit">Write Article</a>
+                <a href="/admin/tickets">Support Tickets</a>
+                <a href="/admin/staff-time">Staff Hours</a>
+                <a href="/admin/backups">Backups</a>
+                <a href="/admin/images">Image Manager</a>
+                <a href="/admin/users">Users</a>
+                <a href="/admin/settings">Settings</a>
+            </nav>
+            <div style="padding: 20px;">
+                <button onclick="adminLogout()" class="btn"
+                    style="width:100%; background:var(--accent-red);">Logout</button>
+            </div>
+        </aside>
+
+        <main class="admin-content">
+            <h1 id="page-title">Add New Casino</h1>
+            <div class="card" style="max-width: 900px;">
+                <form id="platform-form">
+                    <div class="form-group">
+                        <label>Casino Name</label>
+                        <input type="text" name="name" required>
+                    </div>
+
+                    <div style="display: flex; gap: 20px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Rating (0-5)</label>
+                            <input type="number" step="0.1" name="rating" value="5.0">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Category</label>
+                            <input type="text" name="category" list="category-list"
+                                placeholder="Casino, Sports, Slots...">
+                            <datalist id="category-list">
+                                <option value="Casino">
+                                <option value="Sports">
+                                <option value="Slots">
+                                <option value="Live Casino">
+                            </datalist>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tags (comma separated)</label>
+                        <input type="text" name="tags" placeholder="crypto, live-dealer, sports-betting">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Logo URL</label>
+                        <input type="text" name="logo" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Affiliate Link</label>
+                        <input type="text" name="affiliate_link" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Short Description</label>
+                        <textarea name="short_description" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Full Description</label>
+                        <textarea name="description" rows="6"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save Casino</button>
+                    <div id="msg" style="margin-top: 10px;"></div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const editId = urlParams.get('id');
+        const isEditMode = !!editId;
+
+        if (isEditMode) {
+            document.getElementById('page-title').innerText = 'Edit Casino';
+            loadExistingData();
+        }
+
+        async function loadExistingData() {
+            const res = await api.get(`/platforms/${editId}`);
+            if (res.success) {
+                const data = res.data;
+                document.querySelector('[name="name"]').value = data.name || '';
+                document.querySelector('[name="rating"]').value = data.rating || 5.0;
+                document.querySelector('[name="category"]').value = data.category || '';
+                document.querySelector('[name="tags"]').value = data.tags?.join(', ') || '';
+                document.querySelector('[name="logo"]').value = data.images?.[0] || '';
+                document.querySelector('[name="affiliate_link"]').value = data.affiliate_link || '';
+                document.querySelector('[name="short_description"]').value = data.short_description || '';
+                document.querySelector('[name="description"]').value = data.description || '';
+            }
+        }
+
+        document.getElementById('platform-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+            // Convert tags to array
+            if (data.tags) {
+                data.tags = data.tags.split(',').map(t => t.trim()).filter(t => t);
+            }
+
+            // Convert logo to images array
+            if (data.logo) {
+                data.images = [data.logo];
+                delete data.logo;
+            }
+
+            data.rating = parseFloat(data.rating);
+
+            const msg = document.getElementById('msg');
+            let res;
+
+            if (isEditMode) {
+                res = await api.put(`/platforms/${editId}`, data);
+            } else {
+                res = await api.post('/platforms', data);
+            }
+
+            if (res.success) {
+                msg.innerHTML = '<span style="color: green;">✅ Casino saved successfully!</span>';
+                if (!isEditMode) {
+                    setTimeout(() => e.target.reset(), 1500);
+                }
+            } else {
+                msg.innerHTML = `<span style="color: red;">❌ Error: ${res.error}</span>`;
+            }
+        });
+    </script>
+</body>
+
+</html>

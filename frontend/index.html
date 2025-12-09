@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bettrion - Top Casinos</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-box {
+            background: var(--bg-card);
+            border: 2px solid var(--accent-gold);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 500px;
+            text-align: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .popup-box h2 {
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+        }
+
+        .popup-box p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .lang-selector {
+            padding: 8px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="/assets/js/announcement-banner.js" defer></script>
+</head>
+
+<body>
+    <!-- TOS Popup -->
+    <div id="tos-popup" class="popup-overlay">
+        <div class="popup-box">
+            <h2 data-i18n="popup.tosTitle">⚠️ Important Notice</h2>
+            <p><span data-i18n="popup.tosText">By continuing, you agree to our</span> <a href="/terms"
+                    style="color: var(--accent-gold);" data-i18n="popup.tosLink">Terms of Service</a> <span
+                    data-i18n="popup.and">and</span> <a href="/privacy" style="color: var(--accent-gold);"
+                    data-i18n="popup.privacyLink">Privacy Policy</a>.</p>
+            <p data-i18n="popup.cookieText">We use cookies to enhance your experience.</p>
+            <p><strong>Warning:</strong> <span data-i18n="popup.warningText">Online gambling may be restricted or
+                    illegal in your jurisdiction. Please verify local laws before proceeding.</span></p>
+            <div class="popup-buttons">
+                <button onclick="acceptTOS()" class="btn btn-primary" data-i18n="popup.accept">I Accept</button>
+                <button onclick="declineTOS()" class="btn" style="background: var(--accent-red);"
+                    data-i18n="popup.decline">Decline</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Age Popup -->
+    <div id="age-popup" class="popup-overlay">
+        <div class="popup-box">
+            <h2 data-i18n="popup.ageTitle">🔞 Age Verification</h2>
+            <p data-i18n="popup.ageText">You must be 18 years or older to access this website.</p>
+            <p data-i18n="popup.ageQuestion">Are you 18 years of age or older?</p>
+            <div class="popup-buttons">
+                <button onclick="confirmAge(true)" class="btn btn-primary" data-i18n="popup.yes18">Yes, I'm 18+</button>
+                <button onclick="confirmAge(false)" class="btn" style="background: var(--accent-red);"
+                    data-i18n="popup.no">No</button>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <a href="/" class="logo" style="display: flex; align-items: center; gap: 10px;">
+                <img src="/assets/images/bettrion-logo_notxt.webp" alt="Bettrion" style="height: 40px;">
+                <span style="font-size: 1.5rem; font-weight: 800; color: var(--accent-gold);">Bettrion</span>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="/" data-i18n="nav.home">Home</a></li>
+                    <li><a href="/casinos" data-i18n="nav.casinos">Casinos</a></li>
+                    <li><a href="/slots" data-i18n="nav.slots">Slots</a></li>
+                    <li><a href="/articles" data-i18n="nav.news">News</a></li>
+                    <li><a href="/support" data-i18n="nav.support">Support</a></li>
+                </ul>
+            </nav>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <select id="lang-selector" onchange="changeLang(this.value)" class="lang-selector">
+                    <option value="en">🇬🇧 EN</option>
+                    <option value="ar">🇸🇦 AR</option>
+                    <option value="nl">🇳🇱 NL</option>
+                    <option value="de">🇩🇪 DE</option>
+                    <option value="fr">🇫🇷 FR</option>
+                    <option value="es">🇪🇸 ES</option>
+                    <option value="it">🇮🇹 IT</option>
+                    <option value="pt">🇵🇹 PT</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero" style="text-align: center; padding: 60px 0;">
+            <h1 style="font-size: 3rem; margin-bottom: 20px;"><span data-i18n="home.title">Top Casinos</span> <span
+                    id="current-year">2025</span></h1>
+            <p style="color: var(--text-secondary); margin-bottom: 40px; font-size: 1.2rem;" data-i18n="home.subtitle">
+                Verified reviews, exclusive bonuses, and trusted platforms.</p>
+            <a href="/casinos" class="btn btn-primary" data-i18n="home.browse">Browse All Casinos</a>
+        </section>
+
+        <section id="featured-casinos">
+            <h2 style="border-left: 4px solid var(--accent-gold); padding-left: 10px;" data-i18n="home.featured">
+                Featured Platforms</h2>
+            <div id="casino-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                <p style="color: var(--text-secondary);" data-i18n="home.loading">Loading featured casinos...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer
+        style="background: var(--bg-sidebar); border-top: 1px solid var(--border-color); padding: 40px 0; margin-top: 60px; text-align: center; color: var(--text-secondary);">
+        <p>&copy; <span id="footer-year">2025</span> Bettrion. <span data-i18n="footer.rights">All rights
+                reserved.</span></p>
+        <p style="margin-top: 10px;">
+            <a href="/terms" style="color: var(--accent-gold); margin: 0 10px;" data-i18n="footer.terms">Terms</a> |
+            <a href="/privacy" style="color: var(--accent-gold); margin: 0 10px;" data-i18n="footer.privacy">Privacy</a>
+            |
+            <a href="/support" style="color: var(--accent-gold); margin: 0 10px;" data-i18n="footer.support">Support</a>
+        </p>
+    </footer>
+
+    <script src="/assets/js/i18n.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/analytics.js"></script>
+    <script src="/assets/js/button-tracker.js"></script>
+    <script>
+        // Initialize i18n
+        window.addEventListener('DOMContentLoaded', async () => {
+            await i18n.init();
+            const currentLang = i18n.getLocale();
+            document.getElementById('lang-selector').value = currentLang;
+        });
+
+        function changeLang(lang) {
+            i18n.setLocale(lang);
+        }
+
+        // Auto-update year
+        const currentYear = new Date().getFullYear();
+        const yearEl = document.getElementById('current-year');
+        const footerYearEl = document.getElementById('footer-year');
+        if (yearEl) yearEl.innerText = currentYear;
+        if (footerYearEl) footerYearEl.innerText = currentYear;
+
+        // Popup Logic
+        function checkConsent() {
+            const tosAccepted = localStorage.getItem('tos_accepted');
+            const ageVerified = localStorage.getItem('age_verified');
+            if (!tosAccepted) {
+                document.getElementById('tos-popup').style.display = 'flex';
+            } else if (!ageVerified) {
+                document.getElementById('age-popup').style.display = 'flex';
+            }
+        }
+
+        function acceptTOS() {
+            localStorage.setItem('tos_accepted', 'true');
+            document.getElementById('tos-popup').style.display = 'none';
+            document.getElementById('age-popup').style.display = 'flex';
+        }
+
+        function declineTOS() {
+            alert('You must accept the Terms of Service to continue.');
+            window.location.href = 'https://google.com';
+        }
+
+        function confirmAge(is18Plus) {
+            if (is18Plus) {
+                localStorage.setItem('age_verified', 'true');
+                document.getElementById('age-popup').style.display = 'none';
+            } else {
+                alert('You must be 18 or older to access this site.');
+                window.location.href = 'https://google.com';
+            }
+        }
+
+        // Load featured casinos
+        async function loadFeatured() {
+            const res = await api.get('/platforms');
+            const grid = document.getElementById('casino-grid');
+            grid.innerHTML = '';
+
+            if (res.success && res.data.length > 0) {
+                res.data.slice(0, 6).forEach(casino => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    const logo = casino.images && casino.images.length > 0 ? casino.images[0] : 'https://via.placeholder.com/300x150?text=No+Image';
+
+                    const ratingText = i18n.t('casino.rating');
+                    const playNowText = i18n.t('casino.playNow');
+                    const detailsText = i18n.t('casino.details');
+
+                    card.innerHTML = `
+                        <img src="${logo}" alt="${casino.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 4px;">
+                        <h3 style="margin: 15px 0 5px;">${casino.name}</h3>
+                        <div style="color: var(--accent-gold); margin-bottom: 10px;">★ ${casino.rating} / 5.0</div>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; height: 45px;">${casino.short_description || casino.description?.substring(0, 100) || 'Great casino with amazing games!'}</p>
+                        <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                            <a href="/casinos/${casino.slug || casino.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}" class="btn" style="background: var(--accent-gold); color: #000; text-align: center; font-size: 1.05rem; padding: 12px;" data-track-button="details-${casino.id}">${detailsText}</a>
+                            <a href="${casino.affiliate_link || '#'}" class="btn btn-primary" style="text-align: center; background: var(--accent-gold); color: #000; border: 1px solid var(--accent-gold);" data-track-button="play-${casino.id}">${playNowText}</a>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } else {
+                grid.innerHTML = `<p data-i18n="home.noResults">${i18n.t('home.noResults')}</p>`;
+            }
+        }
+
+        window.addEventListener('load', () => {
+            checkConsent();
+            loadFeatured();
+        });
+    </script>
+</body>
+
+</html>

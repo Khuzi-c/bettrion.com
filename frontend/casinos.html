@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Casinos - Bettrion</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        .search-bar {
+            width: 100%;
+            padding: 15px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .casino-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.2s;
+            overflow: hidden;
+        }
+
+        .casino-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-gold);
+        }
+
+        .casino-card img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 0 auto 15px;
+            display: block;
+        }
+
+        .casino-card h3 {
+            margin: 10px 0;
+            color: var(--accent-gold);
+            font-size: 1.3rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .casino-card .rating {
+            color: var(--accent-gold);
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+
+        .casino-card p {
+            color: var(--text-secondary);
+            margin: 15px 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            height: 60px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        .casino-card .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--accent-gold);
+            color: #000;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .casino-card .btn:hover {
+            background: #ffd700;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <a href="/" class="logo" style="display: flex; align-items: center; gap: 10px;">
+                <img src="/assets/images/bettrion-logo_notxt.webp" alt="Bettrion" style="height: 40px;">
+                <span style="font-size: 1.5rem; font-weight: 800; color: var(--accent-gold);">Bettrion</span>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/casinos">Casinos</a></li>
+                    <li><a href="/slots">Slots</a></li>
+                    <li><a href="/articles">News</a></li>
+                    <li><a href="/support">Support</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" style="padding: 40px 0;">
+        <h1 style="margin-bottom: 20px;">All Casinos</h1>
+        <input type="text" id="search" class="search-bar" placeholder="Search casinos..." oninput="search()">
+
+        <div id="casino-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 30px;">
+            <p style="text-align: center; color: var(--text-secondary);">Loading casinos...</p>
+        </div>
+    </main>
+
+    <footer
+        style="background: var(--bg-sidebar); border-top: 1px solid var(--border-color); padding: 40px 0; margin-top: 60px; text-align: center; color: var(--text-secondary);">
+        <p>&copy; 2025 Bettrion. All rights reserved.</p>
+    </footer>
+
+    <script src="/assets/js/api.js"></script>
+    <script>
+        let allCasinos = [];
+
+        async function load() {
+            try {
+                const res = await api.get('/platforms');
+
+                if (res.success && res.data) {
+                    allCasinos = res.data;
+                    render(allCasinos);
+                } else {
+                    console.error('Failed to load casinos:', res);
+                    document.getElementById('casino-grid').innerHTML = '<p style="color: red; text-align: center;">Failed to load casinos. Please try again later.</p>';
+                }
+            } catch (err) {
+                console.error('Error loading casinos:', err);
+                document.getElementById('casino-grid').innerHTML = '<p style="color: red; text-align: center;">Error: ' + err.message + '</p>';
+            }
+        }
+
+        function render(casinos) {
+            const grid = document.getElementById('casino-grid');
+            grid.innerHTML = '';
+
+            if (casinos && casinos.length > 0) {
+                casinos.forEach(casino => {
+                    const card = document.createElement('div');
+                    card.className = 'casino-card';
+
+                    // Get logo
+                    const logo = casino.images && casino.images.length > 0
+                        ? casino.images[0]
+                        : 'https://via.placeholder.com/120?text=No+Logo';
+
+                    // Get or generate slug
+                    const slug = casino.slug || casino.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+
+                    // Get description (truncate if too long)
+                    let description = casino.short_description || casino.description || 'Explore this casino for great games and bonuses!';
+                    if (description.length > 120) {
+                        description = description.substring(0, 120) + '...';
+                    }
+
+                    card.innerHTML = `
+                        <img src="${logo}" alt="${casino.name}">
+                        <h3>${casino.name}</h3>
+                        <div class="rating">★ ${casino.rating || '5.0'} / 5.0</div>
+                        <p>${description}</p>
+                        <a href="/casinos/${slug}" class="btn" style="width: 100%; padding: 12px 20px; font-size: 1.05rem; font-weight: bold;">View Full Details →</a>
+                    `;
+                    grid.appendChild(card);
+                });
+            } else {
+                grid.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No casinos found matching your search.</p>';
+            }
+        }
+
+        function search() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const filtered = allCasinos.filter(c =>
+                c.name.toLowerCase().includes(query) ||
+                (c.category && c.category.toLowerCase().includes(query)) ||
+                (c.tags && c.tags.some(t => t.toLowerCase().includes(query)))
+            );
+            render(filtered);
+        }
+
+        window.addEventListener('load', load);
+    </script>
+</body>
+
+</html>

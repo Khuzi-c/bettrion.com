@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users - Bettrion Admin</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/admin-layout.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="/assets/js/admin-auth.js"></script>
+    <style>
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table th {
+            background: var(--bg-card);
+            color: var(--accent-gold);
+        }
+
+        .online-badge {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            margin-right: 5px;
+        }
+
+        .offline-badge {
+            background: var(--text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <a href="/" class="brand" style="display: flex; align-items: center; gap: 10px;">
+                <img src="/assets/images/bettrion-logo_notxt.webp" alt="Bettrion" style="height: 35px;">
+                <span style="font-size: 1.5rem; font-weight: 800; color: var(--accent-gold);">Bettrion</span>
+            </a>
+            <nav>
+                <a href="/admin/dashboard">Dashboard</a>
+                <a href="/admin/platform-edit">Add Platform</a>
+                <a href="/admin/add-slot">Add Slot</a>
+                <a href="/admin/platforms">Manage Platforms</a>
+                <a href="/admin/articles">Manage Articles</a>
+                <a href="/admin/article-edit">Write Article</a>
+                <a href="/admin/tickets">Support Tickets</a>
+                <a href="/admin/staff-time">Staff Hours</a>
+                <a href="/admin/backups">Backups</a>
+                <a href="/admin/images">Image Manager</a>
+                <a href="/admin/users" class="active">Users</a>
+                <a href="/admin/settings">Settings</a>
+            </nav>
+            <div style="padding: 20px;">
+                <button onclick="adminLogout()" class="btn"
+                    style="width:100%; background:var(--accent-red);">Logout</button>
+            </div>
+        </aside>
+
+        <main class="admin-content">
+            <h1>User Management</h1>
+            <p style="color: var(--text-secondary);">Track users by IP address and country</p>
+
+            <div class="card">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>IP Address</th>
+                            <th>Country</th>
+                            <th>Last Login</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table">
+                        <tr>
+                            <td colspan="6">Loading users...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script>
+        async function loadUsers() {
+            const res = await api.get('/admin/users');
+            const tbody = document.getElementById('users-table');
+
+            if (res.success && res.data.length > 0) {
+                tbody.innerHTML = '';
+                res.data.forEach(user => {
+                    const isOnline = user.is_online;
+                    const badgeClass = isOnline ? 'online-badge' : 'offline-badge';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><span class="${badgeClass}"></span> ${isOnline ? 'Online' : 'Offline'}</td>
+                        <td>${user.username || 'N/A'}</td>
+                        <td>${user.email || 'N/A'}</td>
+                        <td>${user.ip_address || 'Unknown'}</td>
+                        <td>${user.country || 'Unknown'}</td>
+                        <td>${user.last_login ? new Date(user.last_login).toLocaleString() : 'Never'}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="6">No users found.</td></tr>';
+            }
+        }
+
+        window.addEventListener('load', loadUsers);
+        setInterval(loadUsers, 30000); // Refresh every 30 seconds
+    </script>
+</body>
+
+</html>
